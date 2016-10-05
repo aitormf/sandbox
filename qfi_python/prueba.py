@@ -16,9 +16,8 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout
 from PyQt5 import QtGui,QtCore,QtSvg
 
+from threadGUI import ThreadGUI
 from qfi import qfi_ALT
-
-from qfi import qfi_rc
 
 
 class Window(QWidget):
@@ -26,7 +25,7 @@ class Window(QWidget):
         QWidget.__init__(self, *args, **kwargs)
 
         self.w = qfi_ALT.qfi_ALT(self)
-        #self.w.resize(250, 150)
+        self.w.resize(250, 150)
 
         self.layout = QGridLayout()
         self.layout.addWidget(self.w, 0, 0)
@@ -34,15 +33,19 @@ class Window(QWidget):
         self.setLayout(self.layout)
         self.show()
 
+    def update(self, val):
+        self.w.setAltitude(val)
+        self.w.viewUpdate.emit()
+
 
 
 
 if __name__ == '__main__':
-    #app = QApplication(sys.argv)
-    #win = Window()
-    app = QApplication(sys.argv) 
-    svgWidget = QtSvg.QSvgWidget(":/qfi/images/alt/alt_face_2.svg")
-    svgWidget.setGeometry(50,50,759,668)
-    svgWidget.show()
+    app = QApplication(sys.argv)
+    win = Window()
+
+    t2 = ThreadGUI(win)
+    t2.daemon = True
+    t2.start()
 
     sys.exit(app.exec_())

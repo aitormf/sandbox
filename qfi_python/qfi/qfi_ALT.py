@@ -9,10 +9,14 @@ from qfi import qfi_rc
 
 class qfi_ALT (QGraphicsView):
 
+    viewUpdate = QtCore.pyqtSignal()
+
     def __init__(self,winParent):
         QGraphicsView.__init__(self)
 
         self.winParent=winParent
+
+        self.viewUpdate.connect(self.updateView)
         
         self.m_altitude = 0
         self.m_pressure = 28
@@ -31,6 +35,7 @@ class qfi_ALT (QGraphicsView):
 
 
         self.m_scene = QGraphicsScene(self)
+        self.setScene(self.m_scene)
 
         self.init()
 
@@ -89,7 +94,7 @@ class qfi_ALT (QGraphicsView):
 
     def reinit(self):
         if (self.m_scene):
-            #self.m_scene.clear()
+            self.m_scene.clear()
             self.init()
 
     def update(self):
