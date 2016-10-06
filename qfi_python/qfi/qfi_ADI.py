@@ -19,6 +19,7 @@ class qfi_ADI (QGraphicsView):
         self.winParent=winParent
 
         self.viewUpdate.connect(self.update)
+
         
         self.m_roll = 0
         self.m_pitch = 0

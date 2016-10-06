@@ -32,7 +32,7 @@ class ThreadGUI(threading.Thread):
 
     def run(self):
 
-        i = -180
+        i = 0
         while(True):
             i+=1
 
