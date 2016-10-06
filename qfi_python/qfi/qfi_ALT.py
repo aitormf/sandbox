@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-from PyQt5 import QtGui,QtCore,QtSvg
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsItem
+from PyQt5.QtGui import QTransform
+from PyQt5.QtCore import pyqtSignal, QPointF, Qt
+from PyQt5.QtSvg import QGraphicsSvgItem
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsItem, QFrame
 import math
 
 from qfi import qfi_rc
 
 class qfi_ALT (QGraphicsView):
 
-    viewUpdate = QtCore.pyqtSignal()
+    viewUpdate = pyqtSignal()
 
     def __init__(self,winParent):
         QGraphicsView.__init__(self)
@@ -24,7 +26,7 @@ class qfi_ALT (QGraphicsView):
         self.m_originalHeight = 240
         self.m_originalWidth = 240
 
-        self.m_originalAltCtr = QtCore.QPointF(120,120)
+        self.m_originalAltCtr = QPointF(120,120)
 
         self.m_face1Z = -50
         self.m_face2Z = -40
@@ -33,8 +35,15 @@ class qfi_ALT (QGraphicsView):
         self.m_hand2Z = -10
         self.m_caseZ = 10
 
+        self.setStyleSheet("background: transparent; border: none");
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+        self.setInteractive(False)
+
 
         self.m_scene = QGraphicsScene(self)
+        
         self.setScene(self.m_scene)
 
         self.init()
@@ -46,45 +55,45 @@ class qfi_ALT (QGraphicsView):
         self.m_scaleY = self.height() / self.m_originalHeight
 
 
-        self.m_itemFace_1 = QtSvg.QGraphicsSvgItem(":/qfi/images/alt/alt_face_1.svg")
+        self.m_itemFace_1 = QGraphicsSvgItem(":/qfi/images/alt/alt_face_1.svg")
         self.m_itemFace_1.setCacheMode (QGraphicsItem.NoCache)
         self.m_itemFace_1.setZValue( self.m_face1Z )
-        self.m_itemFace_1.setTransform( QtGui.QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
+        self.m_itemFace_1.setTransform( QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
         self.m_itemFace_1.setTransformOriginPoint( self.m_originalAltCtr )
         self.m_scene.addItem (self.m_itemFace_1)
 
-        self.m_itemFace_2 = QtSvg.QGraphicsSvgItem(":/qfi/images/alt/alt_face_2.svg")
+        self.m_itemFace_2 = QGraphicsSvgItem(":/qfi/images/alt/alt_face_2.svg")
         self.m_itemFace_2.setCacheMode (QGraphicsItem.NoCache)
         self.m_itemFace_2.setZValue( self.m_face2Z )
-        self.m_itemFace_2.setTransform( QtGui.QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
+        self.m_itemFace_2.setTransform( QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
         self.m_itemFace_2.setTransformOriginPoint( self.m_originalAltCtr )
         self.m_scene.addItem (self.m_itemFace_2)
 
-        self.m_itemFace_3 = QtSvg.QGraphicsSvgItem(":/qfi/images/alt/alt_face_3.svg")
+        self.m_itemFace_3 = QGraphicsSvgItem(":/qfi/images/alt/alt_face_3.svg")
         self.m_itemFace_3.setCacheMode (QGraphicsItem.NoCache)
         self.m_itemFace_3.setZValue( self.m_face3Z )
-        self.m_itemFace_3.setTransform( QtGui.QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
+        self.m_itemFace_3.setTransform( QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
         self.m_itemFace_3.setTransformOriginPoint( self.m_originalAltCtr )
         self.m_scene.addItem (self.m_itemFace_3)
 
-        self.m_itemHand_1 = QtSvg.QGraphicsSvgItem(":/qfi/images/alt/alt_hand_1.svg")
+        self.m_itemHand_1 = QGraphicsSvgItem(":/qfi/images/alt/alt_hand_1.svg")
         self.m_itemHand_1.setCacheMode (QGraphicsItem.NoCache)
         self.m_itemHand_1.setZValue( self.m_hand1Z )
-        self.m_itemHand_1.setTransform( QtGui.QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
+        self.m_itemHand_1.setTransform( QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
         self.m_itemHand_1.setTransformOriginPoint( self.m_originalAltCtr )
         self.m_scene.addItem (self.m_itemHand_1)
 
-        self.m_itemHand_2 = QtSvg.QGraphicsSvgItem(":/qfi/images/alt/alt_hand_2.svg")
+        self.m_itemHand_2 = QGraphicsSvgItem(":/qfi/images/alt/alt_hand_2.svg")
         self.m_itemHand_2.setCacheMode (QGraphicsItem.NoCache)
         self.m_itemHand_2.setZValue( self.m_hand2Z )
-        self.m_itemHand_2.setTransform( QtGui.QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
+        self.m_itemHand_2.setTransform( QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
         self.m_itemHand_2.setTransformOriginPoint( self.m_originalAltCtr )
         self.m_scene.addItem (self.m_itemHand_2)
 
-        self.m_itemCase = QtSvg.QGraphicsSvgItem(":/qfi/images/alt/alt_case.svg")
+        self.m_itemCase = QGraphicsSvgItem(":/qfi/images/alt/alt_case.svg")
         self.m_itemCase.setCacheMode (QGraphicsItem.NoCache)
         self.m_itemCase.setZValue( self.m_caseZ )
-        self.m_itemCase.setTransform( QtGui.QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
+        self.m_itemCase.setTransform( QTransform.fromScale( self.m_scaleX, self.m_scaleY ), True )
         self.m_itemCase.setTransformOriginPoint( self.m_originalAltCtr )
         self.m_scene.addItem (self.m_itemCase)
 

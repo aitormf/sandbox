@@ -17,24 +17,27 @@ from PyQt5.QtWidgets import QApplication, QWidget, QGridLayout
 from PyQt5 import QtGui,QtCore,QtSvg
 
 from threadGUI import ThreadGUI
-from qfi import qfi_ALT
+from qfi import qfi_ADI
 
 
 class Window(QWidget):
     def __init__(self, *args, **kwargs):
         QWidget.__init__(self, *args, **kwargs)
 
-        self.w = qfi_ALT.qfi_ALT(self)
-        self.w.resize(250, 150)
+        self.w = qfi_ADI.qfi_ADI(self)
+        print (self.w.width())
+        self.w.resize(240, 240)
+        self.w.reinit()
 
         self.layout = QGridLayout()
         self.layout.addWidget(self.w, 0, 0)
-
         self.setLayout(self.layout)
+
         self.show()
 
     def update(self, val):
-        self.w.setAltitude(val)
+        self.w.setRoll(val)
+        self.w.setPitch(val)
         self.w.viewUpdate.emit()
 
 
