@@ -38,6 +38,7 @@ class SetterMotorsI(jderobot.SetterMotors):
         global motors
         print("initiating Motors to: " + current.adapter.getCommunicator().proxyToString(proxy))
         motors.setProxy(proxy)
+        return 0
 
 
 class SetterCameraI(jderobot.SetterCamera):
@@ -45,6 +46,7 @@ class SetterCameraI(jderobot.SetterCamera):
         global camera
         print("initiating Camera to: " + current.adapter.getCommunicator().proxyToString(proxy))
         camera.setProxy(proxy)
+        return 0
 
 
 if __name__ == '__main__':

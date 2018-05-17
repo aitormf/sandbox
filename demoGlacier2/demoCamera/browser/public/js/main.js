@@ -42,17 +42,30 @@ $(document).ready(function() {
     {
         return new jderobot.ImageFormat();
     },
-    getImageData: function(format)
+    getImageData_async: function(cb, format, current)
     {
-        canvas = document.getElementById("myCanvas");
-        image = canvas.toDataURL("image/jpeg");
-        image = image.replace("data:image/jdpeg;base64,", "")
-        msgImage = new jderobot.ImageData();
-        msgImage.pixelData = image
-        msgIMage.description.width = 300;
-        msgIMage.description.height = 150;
-        msgIMage.description.format = "jpeg";
-        return msgIMage;
+        var canvas = document.getElementById("myCanvas");
+        //var image = canvas.toDataURL("image/jpeg");
+        //image = image.replace("data:image/jpeg;base64,", "")
+        let ctx = canvas.getContext('2d');
+        let  imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        let data  = new Uint8Array(imageData.width*imageData.height*3);
+        let j = 0;
+        for (i=0; i < imageData.data.length; i+=4){
+            data[j] = imageData.data[i];
+            data[j+1] = imageData.data[i+1];
+            data[j+2] = imageData.data[i+2];
+            j+=3;
+        }
+        let msgImage = new jderobot.ImageData();
+        let desc = new jderobot.ImageDescription();
+        msgImage.pixelData = data;
+        desc.width = imageData.width;
+        desc.height = imageData.height;
+        desc.format = "RGB8";
+        msgImage.description = desc;
+        cb.ice_response(msgImage);
+        return ;
     }
 	});
 
@@ -98,8 +111,8 @@ $(document).ready(function() {
 
         communicator.setDefaultRouter(router);
 
-        const baseMotors = communicator.stringToProxy("setMotors:tcp -h localhost -p 10000");
-        const baseCamera = communicator.stringToProxy("setCamera:tcp -h localhost -p 10000");
+        const baseMotors = communicator.stringToProxy("setMotors:ws -h localhost -p 10000");
+        const baseCamera = communicator.stringToProxy("setCamera:ws -h localhost -p 10000");
 
         await router.createSession("userid", "xxx");
 
@@ -121,22 +134,27 @@ $(document).ready(function() {
 
         await adapter.activate();
 
-        const category = await router.getCategoryForClient();
+        const categoryMotors = await router.getCategoryForClient();
         const motorsImpl = new MotorsI();
-        const cameraImpl = new CameraI();
 		const motors = motorsImpl;
-        const camera = cameraImpl;
-
         const motorsIdent = new Ice.Identity();
-        const camerasIdent = new Ice.Identity();
-
         motorsIdent.name = "Motors";
-        motorsIdent.category = category;
+        motorsIdent.category = categoryMotors;
 
+        const MotorsR = MotorsPrx.uncheckedCast(adapter.add(motors, motorsIdent));
+
+        contextMotors = new Ice.Context();
+        contextMotors.set("_fwd", "t");
+        await setterMotors.setMotors(MotorsR, contextMotors);
+
+        console.log("aaaa");
+        const cameraImpl = new CameraI();
+        const camera = cameraImpl;
+        const camerasIdent = new Ice.Identity();
+        const categoryCamera = await router.getCategoryForClient();
         camerasIdent.name = "Camera";
-        camerasIdent.category = category;
-
-		const MotorsR = MotorsPrx.uncheckedCast(adapter.add(motors, motorsIdent));
+        camerasIdent.category = categoryCamera;
+        
         const CameraR = CameraPrx.uncheckedCast(adapter.add(camera, camerasIdent));
 
 
@@ -144,12 +162,6 @@ $(document).ready(function() {
         contextCamera = new Ice.Context();
         contextCamera.set("_fwd", "t");
         await setterCamera.setCamera(CameraR, contextCamera);
-
-		contextMotors = new Ice.Context();
-        contextMotors.set("_fwd", "t");
-        await setterMotors.setMotors(MotorsR, contextMotors);
-        //await twoway.initiateCallback(twowayR, "");
-		//await motorsImpl.callbackOK();
 
 
 	}

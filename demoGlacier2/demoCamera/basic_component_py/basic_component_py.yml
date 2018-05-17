@@ -15,4 +15,4 @@ basic_component:
     Name: basic_component_pyCamera
 
   NodeName: basic_component_py
-  Endpoints: tcp -h localhost -p 10000
+  Endpoints: ws -h localhost -p 10000

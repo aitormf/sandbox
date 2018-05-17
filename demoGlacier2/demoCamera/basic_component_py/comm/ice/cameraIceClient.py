@@ -51,6 +51,9 @@ class Camera:
         try:
             server = jdrc.getConfig().getProperty(prefix+".Server")
             server = server2int(server)
+
+            self.imgFormat = jdrc.getConfig().getPropertyWithDefault(prefix+".Format", "RGB8")
+            
             if (server == 3):
                 print ('Interface ' + prefix + ' using Glacier2')
                 return
@@ -59,7 +62,7 @@ class Camera:
             proxyStr = jdrc.getConfig().getProperty(prefix+".Proxy")
             basecamera = ic.stringToProxy(proxyStr)
             self.proxy = jderobot.CameraPrx.checkedCast(basecamera)
-            self.imgFormat = jdrc.getConfig().getPropertyWithDefault(prefix+".Format", "RGB8")
+            
 
             self.update()
 
